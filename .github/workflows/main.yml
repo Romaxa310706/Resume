@@ -27,12 +27,22 @@ jobs:
         run: |
           cd CV
           latexmk -pdf -interaction=nonstopmode resume.tex
+          # Очищаем временные файлы
+          latexmk -c
+
+      - name: Prepare clean deployment
+        run: |
+          mkdir -p deploy
+          cp CV/resume.pdf deploy/
+          cp CV/cvbg.png deploy/
+          cp CV/resume_photo.JPG deploy/
+          touch deploy/.nojekyll
 
       - name: Deploy to resume-pdf branch
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./CV
+          publish_dir: ./deploy
           publish_branch: resume-pdf
           force_orphan: true
           keep_files: false

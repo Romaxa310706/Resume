@@ -14,28 +14,32 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install LaTeX packages
+      - name: Install ALL LaTeX dependencies
         run: |
           dnf update -y
           dnf install -y \
-            texlive-scheme-basic \
-            texlive-collection-latexrecommended \
+            texlive-scheme-full \
+            texlive-wallpaper \
+            texlive-geometry \
             texlive-fontawesome5 \
             texlive-hyperref \
-            texlive-hyphenat
+            texlive-hyphenat \
+            texlive-latexextra \
+            texlive-xetex \
+            texlive-collection-langcyrillic
 
-      - name: Build PDF
+      - name: Build PDF (3 passes for references)
         run: |
           cd CV
           pdflatex -interaction=nonstopmode resume.tex
           pdflatex -interaction=nonstopmode resume.tex
+          pdflatex -interaction=nonstopmode resume.tex
 
-      - name: Deploy PDF
+      - name: Deploy to resume-pdf branch
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./CV
           publish_branch: resume-pdf
-          keep_files: false
           force_orphan: true
-          commit_message: "Auto-update resume.pdf [skip ci]"
+          commit_message: "Auto-update: $(date +'%Y-%m-%d %H:%M')"

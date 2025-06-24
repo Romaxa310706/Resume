@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         
-      - name: Install Full TeX Live
+      - name: Install TeX Live
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive-full
@@ -26,29 +26,18 @@ jobs:
           cd CV
           latexmk -pdf -interaction=nonstopmode resume.tex
 
-      - name: Configure Git
+      - name: Deploy to resume-pdf branch
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-
-      - name: Deploy to resume-pdf branch
-        run: |
-          mkdir -p pdf-deploy
-          cp CV/resume.pdf pdf-deploy/
           
-          if git clone --branch resume-pdf https://github.com/${{ github.repository }}.git pdf-branch; then
-            echo "Branch exists"
-          else
-            mkdir pdf-branch
-            cd pdf-branch
-            git init
-            git checkout -b resume-pdf
-            cd ..
-          fi
-          
-          cp pdf-deploy/resume.pdf pdf-branch/
+          git clone https://github.com/${{ github.repository }}.git pdf-branch
           cd pdf-branch
+          
+          git checkout resume-pdf 2>/dev/null || git checkout -b resume-pdf
+          
+          cp ../CV/resume.pdf .
           
           git add resume.pdf
           git commit -m "Auto-update: $(date +'%Y-%m-%d %H:%M')"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git resume-pdf --force
+          git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git resume-pdf --force

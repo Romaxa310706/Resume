@@ -5,9 +5,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     
+    environment:
+      name: github-pages
+      url: https://${{ github.repository_owner }}.github.io/cv/resume.pdf
+
     steps:
       - uses: actions/checkout@v4
         
@@ -20,15 +28,22 @@ jobs:
             texlive-fonts-extra \
             texlive-lang-cyrillic \
             texlive-xetex
-
       - name: Build PDF
         run: |
           cd CV
           latexmk -pdf -interaction=nonstopmode resume.tex
           latexmk -c
-
-      - name: Prepare GitHub Pages
+      - name: Prepare Pages Content
         run: |
-          mkdir -p docs
-          cp CV/resume.pdf docs/
-          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=resume.pdf"></head></html>' > docs/index.html
+          mkdir -p public/cv
+          cp CV/resume.pdf public/cv/
+          cp CV/cvbg.png public/cv/
+          cp CV/resume_photo.JPG public/cv/
+          echo "https://${{ github.repository_owner }}.github.io/cv/resume.pdf" > public/url.txt
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

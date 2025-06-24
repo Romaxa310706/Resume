@@ -1,0 +1,133 @@
+\documentclass{letter}
+\usepackage{wallpaper}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\usepackage{fontawesome5}
+\usepackage{hyperref}
+\usepackage[none]{hyphenat}
+\usepackage{graphicx}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\geometry{
+  paperwidth=\dimexpr\textwidth+\marginparsep+\marginparwidth\relax,
+  paperheight=\dimexpr\textheight+\footskip\relax,
+  left=20pt,
+  right=20pt,
+  top=0pt,
+  bottom=0pt,
+  nohead,
+  nofoot,
+  nomarginpar
+}
+
+\ThisCenterWallPaper{1.5}{cvbg.png}
+
+\begin{document}
+
+\begin{minipage}[t]{0.40\textwidth}
+\setlength{\baselineskip}{1.5\baselineskip}
+\color{white}
+\vspace{1cm}
+{\large Personal info}
+
+\rule{\linewidth}{0.4pt}
+
+\faPhone \quad +79636597744
+
+
+\faEnvelope \quad \href{mailto:svetlov3107@gmail.com}{Svetlov3107@gmail.com}
+
+
+\faMapMarker \quad Moscow
+
+\rule{\linewidth}{0.4pt}
+
+{\large Links}
+
+\faTelegram \quad \href{https://t.me/Super_romaxa}{Roman} {(@Superromaxa)}
+
+\faInstagram \quad \href{https://www.instagram.com/superromaxa?igsh=MTZraXFzZzZoODk5cg%3D%3D&utm_source=qr}{Superromaxa}
+
+\rule{\linewidth}{0.4pt}
+
+{\large Skills}
+
+\faCircleNotch \quad Python
+
+\faCircleNotch \quad C++
+
+\faCircleNotch \quad Java
+
+\faCircleNotch \quad Bash
+
+
+\rule{\linewidth}{0.4pt}
+
+{\large Languages}
+
+\faLanguage \quad Russian
+
+\faLanguage \quad English
+
+\faLanguage \quad Italian
+
+\faLanguage \quad French
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.60\textwidth}
+\setlength{\baselineskip}{1.5\baselineskip}
+\vspace{0.8cm}
+
+% Используем tabular для выравнивания имени и фото
+\begin{tabular}{@{} p{0.8\linewidth} p{0.3\linewidth} @{}}
+    \parbox[t]{0.8\linewidth}{
+        {\huge Roman Svetlov}\\
+        {\large Data Scientist}
+    } &
+    \raisebox{-0.5\height}[0pt][0pt]{
+        \includegraphics[width=1.5cm,height=2cm,keepaspectratio]{resume_photo.JPG}
+    }
+\end{tabular}
+
+\vspace{0.8cm}
+
+A passionate mathematician and programmer with a strong foundation in algorithms, logic, and problem solving. Excelled in advanced mathematics and computer science, developing skills in analytical thinking and software development through hands-on projects, including a Python-based task management bot, 3D modeling, and robotics. Gained teaching experience by tutoring younger students, improving both technical understanding and communication skills. Passionate about applying math and programming to build innovative tools that solve complex problems and advance automation, data analysis, and education.
+
+\vspace{0.5cm}
+
+{\large Work Experience}
+\rule{\linewidth}{0.4pt}
+
+{\large \textbf{Volunteering}}
+
+{\small October 2022 - April 2023}
+
+\begin{itemize}
+    \item Driven to share my knowledge, I taught in my algebra teacher's evening classes, helping younger students solve problems.
+\end{itemize}
+
+{\large \textbf{Internship}}
+
+{\small July 2024 - August 2024}
+
+\begin{itemize}
+    \item Assisted in project documentation review, verifying cost estimates and material lists to ensure accuracy and compliance with requirements.
+\end{itemize}
+
+{\large Education}
+\rule{\linewidth}{0.4pt}
+
+{\large \textbf{Heriot Watt University (Bachelor)}}
+
+{\small September 2024 - June 2025}
+
+{\large \textbf{Higher School of Economics (Bachelor)}}
+
+{\small September 2024 - June 2025}
+
+\end{minipage}
+\end{document}

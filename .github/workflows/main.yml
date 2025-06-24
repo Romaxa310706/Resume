@@ -7,21 +7,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: debian:bookworm  # Используем стабильный Debian вместо Fedora
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Для работы с историей веток
 
-      - name: Install LaTeX (Debian packages)
-        run: |
-          apt-get update
-          apt-get install -y --no-install-recommends \
-            texlive-full \
-            texlive-latex-extra \
-            texlive-fonts-extra \
-            texlive-xetex \
-            lmodern \
-            fonts-freefont-otf
+      - name: Setup LaTeX
+        uses: xu-cheng/texlive-action@v2
+        with:
+          texlive-profile: minimal
+          packages: |
+            collection-basic
+            collection-latex
+            collection-latexextra
+            collection-fontsrecommended
+            collection-langcyrillic
+            wallpaper
+            fontawesome5
 
       - name: Build PDF
         run: |
@@ -30,11 +33,22 @@ jobs:
           pdflatex -interaction=nonstopmode resume.tex
           pdflatex -interaction=nonstopmode resume.tex
 
-      - name: Upload to resume-pdf branch
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./CV
-          publish_branch: resume-pdf
-          force_orphan: true
-          commit_message: "Auto-update: $(date +'%Y-%m-%d %H:%M')"
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Deploy to resume-pdf branch
+        run: |
+          cd CV
+          git init
+          git remote add origin https://github.com/${{ github.repository }}.git
+          git fetch origin resume-pdf || git branch -m resume-pdf
+          git checkout -b resume-pdf --track origin/resume-pdf || git checkout -b resume-pdf
+          git rm -rf . || true
+          cp ../resume.pdf .
+          git add resume.pdf
+          git commit -m "Auto-update: $(date +'%Y-%m-%d %H:%M')"
+          git push origin resume-pdf --force
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

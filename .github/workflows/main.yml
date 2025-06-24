@@ -1,21 +1,27 @@
-name: Build Resume PDF
-on: [push]
+name: Build and Deploy Resume PDF
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    container: fedora:31
+    container: fedora:latest
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Install LaTeX
+      - name: Install LaTeX packages
         run: |
           dnf update -y
           dnf install -y \
-            texlive-scheme-full \
-            texlive-wallpaper \
+            texlive-scheme-basic \
+            texlive-collection-latexrecommended \
             texlive-fontawesome5 \
+            texlive-hyperref \
             texlive-hyphenat
 
       - name: Build PDF
@@ -24,8 +30,12 @@ jobs:
           pdflatex -interaction=nonstopmode resume.tex
           pdflatex -interaction=nonstopmode resume.tex
 
-      - name: Upload PDF
-        uses: actions/upload-artifact@v4  # ← Вот это исправление!
+      - name: Deploy PDF
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: resume.pdf
-          path: CV/resume.pdf
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./CV
+          publish_branch: resume-pdf
+          keep_files: false
+          force_orphan: true
+          commit_message: "Auto-update resume.pdf [skip ci]"

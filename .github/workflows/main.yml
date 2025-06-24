@@ -5,13 +5,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pages: write
       id-token: write
     
+    environment:
+      name: github-pages
+      url: https://${{ github.repository_owner }}.github.io/cv/resume.pdf
+
     steps:
       - uses: actions/checkout@v4
         
@@ -31,7 +35,7 @@ jobs:
           latexmk -pdf -interaction=nonstopmode resume.tex
           latexmk -c
 
-      - name: Prepare GitHub Pages
+      - name: Prepare Pages Content
         run: |
           mkdir -p public/cv
           cp CV/resume.pdf public/cv/

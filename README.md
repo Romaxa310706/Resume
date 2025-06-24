@@ -45,5 +45,3 @@ docker run -v $(pwd):/app resume-builder
 def secret():
     return "Если вы это читаете, значит я не безнадежен :)"
 ```
-
-*Последнее обновление: $(date +"%d.%m.%Y %H:%M")*

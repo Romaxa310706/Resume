@@ -10,41 +10,41 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Setup TeX Live
-        uses: xu-cheng/texlive-action@v2
-        with:
-          texlive-profile: full
-      
-      - name: Install specific packages
+        
+      - name: Install Full TeX Live
         run: |
-          tlmgr install \
-            wallpaper \
-            fontawesome5 \
-            geometry \
-            hyphenat \
-            hyperref \
-            collection-langcyrillic
-      
+          sudo apt-get update
+          sudo apt-get install -y texlive-full
+          sudo apt-get install -y \
+            texlive-latex-extra \
+            texlive-fonts-extra \
+            texlive-lang-cyrillic \
+            texlive-xetex
+
       - name: Build PDF
         run: |
           cd CV
           latexmk -pdf -interaction=nonstopmode resume.tex
-        
+
       - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-      
+
       - name: Deploy to resume-pdf branch
         run: |
           mkdir -p pdf-deploy
           cp CV/resume.pdf pdf-deploy/
           
-          git clone --branch resume-pdf https://github.com/${{ github.repository }}.git pdf-branch || \
-            (mkdir pdf-branch && cd pdf-branch && git init && git checkout -b resume-pdf)
+          if git clone --branch resume-pdf https://github.com/${{ github.repository }}.git pdf-branch; then
+            echo "Branch exists"
+          else
+            mkdir pdf-branch
+            cd pdf-branch
+            git init
+            git checkout -b resume-pdf
+            cd ..
+          fi
           
           cp pdf-deploy/resume.pdf pdf-branch/
           cd pdf-branch

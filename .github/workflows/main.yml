@@ -1,41 +1,36 @@
-name: Build and Deploy Resume PDF
+name: Build and Deploy Resume
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    container: fedora:latest
+    container: debian:bookworm  # Используем стабильный Debian вместо Fedora
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Install ALL LaTeX dependencies
+      - name: Install LaTeX (Debian packages)
         run: |
-          dnf update -y
-          dnf install -y \
-            texlive-scheme-full \
-            texlive-wallpaper \
-            texlive-geometry \
-            texlive-fontawesome5 \
-            texlive-hyperref \
-            texlive-hyphenat \
-            texlive-latexextra \
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            texlive-full \
+            texlive-latex-extra \
+            texlive-fonts-extra \
             texlive-xetex \
-            texlive-collection-langcyrillic
+            lmodern \
+            fonts-freefont-otf
 
-      - name: Build PDF (3 passes for references)
+      - name: Build PDF
         run: |
           cd CV
           pdflatex -interaction=nonstopmode resume.tex
           pdflatex -interaction=nonstopmode resume.tex
           pdflatex -interaction=nonstopmode resume.tex
 
-      - name: Deploy to resume-pdf branch
+      - name: Upload to resume-pdf branch
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

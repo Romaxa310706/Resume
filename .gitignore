@@ -1,0 +1,4 @@
+echo "*.aux" >> .gitignore
+echo "*.log" >> .gitignore
+echo "*.out" >> .gitignore
+echo "resume.pdf" >> .gitignore

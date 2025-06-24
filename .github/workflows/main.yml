@@ -9,19 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install LaTeX dependencies
+      - name: Install LaTeX
         run: |
           dnf update -y
           dnf install -y \
-            texlive-collection-latexrecommended \
-            texlive-collection-fontsrecommended \
-            texlive-collection-pictures \
-            texlive-collection-science \
-            texlive-collection-langcyrillic \
+            texlive-scheme-full \
             texlive-wallpaper \
-            texlive-geometry \
             texlive-fontawesome5 \
-            texlive-hyperref \
             texlive-hyphenat
 
       - name: Build PDF
@@ -31,7 +25,7 @@ jobs:
           pdflatex -interaction=nonstopmode resume.tex
 
       - name: Upload PDF
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # ← Вот это исправление!
         with:
           name: resume.pdf
           path: CV/resume.pdf
